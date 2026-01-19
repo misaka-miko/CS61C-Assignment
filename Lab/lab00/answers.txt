@@ -1,4 +1,4 @@
-1.
-2.
-3.
-4.
+1. grep -r "keyword" /path
+2. ps
+3. kill <PID>
+4. diff <file-1> <file-2>
