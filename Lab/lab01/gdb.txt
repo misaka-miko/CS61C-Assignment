@@ -1,9 +1,9 @@
-1.
-2.
-3.
-4.
-5.
-6.
-7.
-8.
-9.
+1. set args <arg-list>
+2. b/break <line/function>
+3. n/next
+4. s/step
+5. c/continue
+6. p/print <variable_name>
+7. display <variable_name>
+8. info locals
+9. q/quit
