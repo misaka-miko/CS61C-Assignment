@@ -32,6 +32,7 @@ Image *readData(char *filename) {
   char format[3];
   uint32_t maxColor;
 
+  // HACK: Enhancing the robustness of the code
   if (fscanf(fp, "%2s %u %u %u", format, &img->cols, &img->rows, &maxColor) !=
       4) {
     fclose(fp);
