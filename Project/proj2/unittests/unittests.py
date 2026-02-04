@@ -22,6 +22,13 @@ class TestAbs(TestCase):
         t.check_scalar("a0", 1)
         t.execute()
 
+    def test_minus_one(self):
+        t = AssemblyTest(self, "abs.s")
+        t.input_scalar("a0", -1)
+        t.call("abs")
+        t.check_scalar("a0", 1)
+        t.execute()
+
     @classmethod
     def tearDownClass(cls):
         print_coverage("abs.s", verbose=False)
@@ -42,6 +49,14 @@ class TestRelu(TestCase):
         t.check_array(array0, [1, 0, 3, 0, 5, 0, 7, 0, 9])
         # generate the `assembly/TestRelu_test_simple.s` file and run it through venus
         t.execute()
+
+    def test_invalid_length(self):
+        t = AssemblyTest(self, "relu.s")
+        array0 = t.array([1, 1, 1, 1, 1])
+        t.input_array("a0", array0)
+        t.input_scalar("a1", -1)
+        t.call("relu")
+        t.execute(code=78)
 
     @classmethod
     def tearDownClass(cls):
@@ -92,7 +107,6 @@ class TestDot(TestCase):
 
 
 class TestMatmul(TestCase):
-
     def do_matmul(self, m0, m0_rows, m0_cols, m1, m1_rows, m1_cols, result, code=0):
         t = AssemblyTest(self, "matmul.s")
         # we need to include (aka import) the dot.s file since it is used by matmul.s
@@ -120,9 +134,13 @@ class TestMatmul(TestCase):
 
     def test_simple(self):
         self.do_matmul(
-            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
-            [1, 2, 3, 4, 5, 6, 7, 8, 9], 3, 3,
-            [30, 36, 42, 66, 81, 96, 102, 126, 150]
+            [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            3,
+            3,
+            [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            3,
+            3,
+            [30, 36, 42, 66, 81, 96, 102, 126, 150],
         )
 
     @classmethod
@@ -131,8 +149,7 @@ class TestMatmul(TestCase):
 
 
 class TestReadMatrix(TestCase):
-
-    def do_read_matrix(self, fail='', code=0):
+    def do_read_matrix(self, fail="", code=0):
         t = AssemblyTest(self, "read_matrix.s")
         # load address to the name of the input file into register a0
         t.input_read_filename("a0", "inputs/test_read_matrix/test_input.bin")
@@ -163,8 +180,7 @@ class TestReadMatrix(TestCase):
 
 
 class TestWriteMatrix(TestCase):
-
-    def do_write_matrix(self, fail='', code=0):
+    def do_write_matrix(self, fail="", code=0):
         t = AssemblyTest(self, "write_matrix.s")
         outfile = "outputs/test_write_matrix/student.bin"
         # load output file name into a0 register
@@ -188,7 +204,6 @@ class TestWriteMatrix(TestCase):
 
 
 class TestClassify(TestCase):
-
     def make_test(self):
         t = AssemblyTest(self, "classify.s")
         t.include("argmax.s")
@@ -203,8 +218,12 @@ class TestClassify(TestCase):
         t = self.make_test()
         out_file = "outputs/test_basic_main/student0.bin"
         ref_file = "outputs/test_basic_main/reference0.bin"
-        args = ["inputs/simple0/bin/m0.bin", "inputs/simple0/bin/m1.bin",
-                "inputs/simple0/bin/inputs/input0.bin", out_file]
+        args = [
+            "inputs/simple0/bin/m0.bin",
+            "inputs/simple0/bin/m1.bin",
+            "inputs/simple0/bin/inputs/input0.bin",
+            out_file,
+        ]
         # call classify function
         t.call("classify")
         # generate assembly and pass program arguments directly to venus
@@ -221,10 +240,13 @@ class TestClassify(TestCase):
 
 
 class TestMain(TestCase):
-
     def run_main(self, inputs, output_id, label):
-        args = [f"{inputs}/m0.bin", f"{inputs}/m1.bin", f"{inputs}/inputs/input0.bin",
-                f"outputs/test_basic_main/student{output_id}.bin"]
+        args = [
+            f"{inputs}/m0.bin",
+            f"{inputs}/m1.bin",
+            f"{inputs}/inputs/input0.bin",
+            f"outputs/test_basic_main/student{output_id}.bin",
+        ]
         reference = f"outputs/test_basic_main/reference{output_id}.bin"
         t = AssemblyTest(self, "main.s", no_utils=True)
         t.call("main")
