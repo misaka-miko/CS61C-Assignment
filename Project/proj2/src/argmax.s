@@ -23,12 +23,12 @@ argmax:
   jal exit2
 
 pre_assign:
-  # t0: the index
-  # t1: the max element
-  # t2: increment tracker
-  mv t0, zero
+  mv t0, a0
   lw t1, 0(a0)
-  mv t2, zero
+  mv t2, a0
+
+  addi a0, a0, 4
+  addi a1, a1, -1
 
 loop_start:
 
@@ -40,18 +40,15 @@ loop_start:
  # Update the maximum element
   mv t1, t3
  # Update the maximum element index
-  mv t0, t2
+  mv t2, a0
 
 loop_continue:
   addi a0, a0, 4
   addi a1, a1, -1
-  addi t2, t2, 1
 
   j loop_start
 
 loop_end:
-  mv a0, t0
-
-    # Epilogue
-
-    ret
+  sub a0, t2, t0
+  srli a0, a0, 2
+  ret
