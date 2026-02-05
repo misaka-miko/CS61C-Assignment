@@ -68,7 +68,7 @@ class TestArgmax(TestCase):
         t = AssemblyTest(self, "argmax.s")
         # create an array in the data section
         # raise NotImplementedError("TODO")
-        array0 = t.array([1, 5, 3, 2, 4])
+        array0 = t.array([1, 5, 3, 2, 4, 9, 8])
         # load address of the array into register a0
         t.input_array("a0", array0)
         # set a1 to the length of the array
@@ -76,7 +76,7 @@ class TestArgmax(TestCase):
         # call the `argmax` function
         t.call("argmax")
         # check that the register a0 contains the correct output
-        t.check_scalar("a0", 1)
+        t.check_scalar("a0", 5)
         # generate the `assembly/TestArgmax_test_simple.s` file and run it through venus
         t.execute()
 
@@ -97,17 +97,89 @@ class TestDot(TestCase):
     def test_simple(self):
         t = AssemblyTest(self, "dot.s")
         # create arrays in the data section
-        raise NotImplementedError("TODO")
-        # TODO
+        array0 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        array1 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
         # load array addresses into argument registers
-        # TODO
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
         # load array attributes into argument registers
-        # TODO
+        t.input_scalar("a2", len(array0))
+        t.input_scalar("a3", 1)
+        t.input_scalar("a4", 1)
         # call the `dot` function
         t.call("dot")
         # check the return value
-        # TODO
+        t.check_scalar("a0", 285)
         t.execute()
+
+    def test_stride(self):
+        t = AssemblyTest(self, "dot.s")
+        # create arrays in the data section
+        array0 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        array1 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        # load array addresses into argument registers
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+        # load array attributes into argument registers
+        t.input_scalar("a2", 3)
+        t.input_scalar("a3", 1)
+        t.input_scalar("a4", 2)
+        # call the `dot` function
+        t.call("dot")
+        # check the return value
+        t.check_scalar("a0", 22)
+        t.execute()
+
+    def test_invalid_length(self):
+        t = AssemblyTest(self, "dot.s")
+        # create arrays in the data section
+        array0 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        array1 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        # load array addresses into argument registers
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+        # load array attributes into argument registers
+        t.input_scalar("a2", -1)
+        t.input_scalar("a3", 1)
+        t.input_scalar("a4", 1)
+        # call the `dot` function
+        t.call("dot")
+        # check the return value
+        t.execute(code=75)
+
+    def test_invalid_stride_one(self):
+        t = AssemblyTest(self, "dot.s")
+        # create arrays in the data section
+        array0 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        array1 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        # load array addresses into argument registers
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+        # load array attributes into argument registers
+        t.input_scalar("a2", len(array0))
+        t.input_scalar("a3", -1)
+        t.input_scalar("a4", 1)
+        # call the `dot` function
+        t.call("dot")
+        # check the return value
+        t.execute(code=76)
+
+    def test_invalid_stride_two(self):
+        t = AssemblyTest(self, "dot.s")
+        # create arrays in the data section
+        array0 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        array1 = t.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        # load array addresses into argument registers
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+        # load array attributes into argument registers
+        t.input_scalar("a2", len(array0))
+        t.input_scalar("a3", 1)
+        t.input_scalar("a4", -1)
+        # call the `dot` function
+        t.call("dot")
+        # check the return value
+        t.execute(code=76)
 
     @classmethod
     def tearDownClass(cls):
