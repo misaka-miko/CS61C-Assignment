@@ -1,0 +1,7 @@
+1. setting of a saved register which has not been saved.
+
+2. No, this is not a function call, This is `jal x0, Label`.
+
+3. Yes, we need to save in `inc_arr`, since we call `helpfn`, which will overwrite the value in `ra`, other functions are "leaf functions", the `ra` won't be overwritten.
+
+4. Only functions exported through `.globl` will be reported by cc_checker.

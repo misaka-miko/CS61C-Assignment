@@ -1,0 +1,9 @@
+1. t0
+
+2. s0
+
+3. s1: source, s2: dest
+
+4. the code from "loop" to "end"
+
+5. the pointers are loaded using `la` and increment using the offset value calculated and stored in s3. using `lw` to dereferencing the pointer.
