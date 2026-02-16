@@ -1,0 +1,2 @@
+1. Non-pipelined: 8MHz
+2. Pipelined: 12.5MHz
